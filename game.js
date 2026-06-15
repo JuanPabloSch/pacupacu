@@ -4,15 +4,6 @@ canvas.width = COLS * TILE;
 canvas.height = ROWS * TILE;
 
 
-function activarModoVulnerable() {
-    isVulnerable = true;
-    vulnerableTimer = 600; // 600 frames (aprox 10 segundos a 60fps)
-    ghosts.forEach(g => {
-        g.originalColor = g.color; // Guardamos color para restaurarlo luego
-        g.color = "blue";
-    });
-}
-
 function update() {
      // mover fantasmas
     ghosts.forEach(g => {
@@ -88,13 +79,25 @@ if (
     }
     
     // 5. Gestión del tiempo de vulnerabilidad de fantasmas
-    if (isVulnerable) {
-        vulnerableTimer--;
-        if (vulnerableTimer <= 0) {
-            isVulnerable = false;
-            ghosts.forEach(g => g.color = g.originalColor || "red");
-        }
+    // 5. Gestión del tiempo de vulnerabilidad
+
+if (isVulnerable) {
+
+    vulnerableTimer--;
+
+    if (vulnerableTimer <= 0) {
+
+        isVulnerable = false;
+
+        ghosts.forEach(g => {
+
+            g.color = g.originalColor;
+            g.state = "CHASING";
+
+        });
+
     }
+}
 }
 
 function draw() {
@@ -174,7 +177,7 @@ pellets.filter(p => p.type === 'power').forEach(p => {
         // COLISIÓN (Va dentro del forEach de fantasmas, pero fuera del dibujo del fantasma)
         // Dentro del forEach de fantasmas en draw()
         if (Math.hypot(pacman.x - g.x, pacman.y - g.y) < 0.6) {
-        if (isVulnerable && g.color === "blue") {
+        if (g.state === "FRIGHTENED") {
         // ¡PAC-MAN GANA! El fantasma se va a casa
         g.x = 13; 
         g.y = 5;

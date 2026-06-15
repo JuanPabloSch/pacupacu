@@ -22,17 +22,19 @@ function resetGame() {
     }
 }
 
-// --- FUNCIONES DE APOYO (Aquí es donde va) ---
 function activarModoVulnerable() {
+
     isVulnerable = true;
-    vulnerableTimer = 600; 
+    vulnerableTimer = 200;
+
+
     ghosts.forEach(g => {
-        g.originalColor = g.color; 
+
         g.color = "blue";
+        g.state = "FRIGHTENED";
+
     });
 }
-
-
 
 const pacman = {
     x: 13, y: 8, dirX: 0, dirY: 0, nextDirX: 0, nextDirY: 0, angle: 0
@@ -43,17 +45,19 @@ const ghosts = [
     x:13,
     y:5,
     color:"red",
+    originalColor:"red",
     dirX:0,
     dirY:0,
     state:"HOUSE",
     houseTimer:80,
     type:"blinky"
-    },
+},
 
-    {
+{
     x:14,
     y:5,
     color:"pink",
+    originalColor:"pink",
     dirX:0,
     dirY:0,
     state:"HOUSE",
@@ -83,7 +87,84 @@ window.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight") { pacman.nextDirX = 1; pacman.nextDirY = 0; }
 });
 
+
+
 function moveGhost(g) {
+    if(g.state === "FRIGHTENED"){
+
+
+    const dist = Math.hypot(
+        g.x - Math.round(g.x),
+        g.y - Math.round(g.y)
+    );
+
+
+    if(dist < 0.2){
+
+        let gridX = Math.round(g.x);
+        let gridY = Math.round(g.y);
+
+
+        let dirs = [
+            {x:0,y:-1},
+            {x:0,y:1},
+            {x:-1,y:0},
+            {x:1,y:0}
+        ];
+
+
+        let valid = dirs.filter(d=>{
+
+            let nx = gridX+d.x;
+            let ny = gridY+d.y;
+
+            return map[ny] && map[ny][nx] !== 1;
+
+        });
+
+
+
+        // elegir el camino que más aleja de Pac-Man
+
+        let best = valid[0];
+        let max = -Infinity;
+
+
+        valid.forEach(d=>{
+
+            let distancia = Math.hypot(
+                (gridX+d.x)-pacman.x,
+                (gridY+d.y)-pacman.y
+            );
+
+
+            if(distancia > max){
+
+                max = distancia;
+                best = d;
+
+            }
+
+        });
+
+
+
+        if(best){
+
+            g.dirX = best.x;
+            g.dirY = best.y;
+
+        }
+
+    }
+
+
+    g.x += g.dirX * SPEED * 0.8;
+g.y += g.dirY * SPEED * 0.8;
+
+
+    return;
+}
     // 1. ESTADO: EN CASA
 if (g.state === 'HOUSE') {
 
