@@ -14,6 +14,12 @@ function activarModoVulnerable() {
 }
 
 function update() {
+     // mover fantasmas
+    ghosts.forEach(g => {
+        moveGhost(g);
+    });
+
+
     // 1. Mover Pac-Man
     pacman.x += pacman.dirX * SPEED;
     pacman.y += pacman.dirY * SPEED;
@@ -137,10 +143,9 @@ pellets.filter(p => p.type === 'power').forEach(p => {
 
     // 5. Dibujar Fantasmas
     ghosts.forEach(g => {
-        moveGhost(g);
-        
+                
         const centerX = (g.x + 0.5) * TILE;
-        const centerY = (g.y + 0.5) * TILE;
+        const centerY = (g.y + 0.5 + (g.visualY || 0)) * TILE;
         const radius = TILE / 3;
 
         ctx.fillStyle = g.color;

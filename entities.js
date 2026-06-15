@@ -46,7 +46,7 @@ const ghosts = [
     dirX:0,
     dirY:0,
     state:"HOUSE",
-    houseTimer:120,
+    houseTimer:80,
     type:"blinky"
     },
 
@@ -57,7 +57,7 @@ const ghosts = [
     dirX:0,
     dirY:0,
     state:"HOUSE",
-    houseTimer:240,
+    houseTimer:120,
     type:"pinky"
 }
 ];
@@ -92,7 +92,7 @@ if (g.state === 'HOUSE') {
 
 
     // movimiento flotando dentro de la casa
-    g.y = Math.round(g.y) + Math.sin(Date.now()/500)*0.1;
+    g.visualY = Math.sin(Date.now()/500)*0.1;
 
 
     g.houseTimer--;
@@ -109,18 +109,25 @@ if (g.state === 'HOUSE') {
 }
 
     // 2. ESTADO: SALIENDO
-    if (g.state === 'EXITING') {
-        g.dirX = 0; 
-        g.dirY = -0.1; // Sube hacia el pasillo
-        g.x += g.dirX;
-        g.y += g.dirY;
-        
-        if (g.y <= 4) { // Ajusta este valor a la fila donde está tu pasillo
-            g.y = 4;
-            g.state = 'CHASING';
-        }
-        return;
+if (g.state === 'EXITING') {
+
+    g.dirX = 0;
+    g.dirY = -1;
+
+
+    g.y += g.dirY * SPEED * 0.5;
+
+
+    if(g.y <= 4){
+
+        g.y = 4;
+        g.state = "CHASING";
+
     }
+
+
+    return;
+}
 
     // 3. ESTADO: CHASING
 
