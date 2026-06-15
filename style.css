@@ -1,0 +1,13 @@
+body {
+    margin: 0;
+    background-color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+canvas {
+    border: 4px solid blue;
+    max-width: 90vw; /* El canvas nunca será más ancho que la pantalla */
+    max-height: 80vh; /* El canvas nunca será más alto que la pantalla */
+}
